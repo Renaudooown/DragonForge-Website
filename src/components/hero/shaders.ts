@@ -15,6 +15,7 @@ uniform float uTime;
 uniform vec2 uPointer;
 uniform float uIntro;
 uniform float uFade;
+uniform float uLift;
 
 float hash(vec2 p) {
   p = fract(p * vec2(127.1, 311.7));
@@ -100,9 +101,9 @@ void main() {
 
   float t = uTime;
   float breath = 0.01 * sin(t * 0.32);
-  float rad = 0.312 + breath;
+  float rad = 0.348 + breath;
 
-  uv.y -= 0.07;
+  uv.y -= uLift;
 
   float r = length(uv);
   float inside = rad * rad - dot(uv, uv);
@@ -140,16 +141,16 @@ void main() {
 
   float ang = atan(uv.y, uv.x);
   float warp = fbm2(vec2(ang * 2.4, t * 0.13)) - 0.5;
-  float cr = (r - rad) + warp * 0.028;
+  float cr = (r - rad) + warp * 0.05;
 
   float spike = fbm2(vec2(ang * 2.7 + t * 0.11, t * 0.16));
   float spike2 = fbm2(vec2(ang * 5.6 - t * 0.07, 3.1 + t * 0.09));
-  float coronaShape = 0.42 + 0.58 * spike;
-  coronaShape *= 0.62 + 0.38 * spike2;
+  float coronaShape = 0.36 + 0.64 * spike;
+  coronaShape *= 0.55 + 0.45 * spike2;
 
-  float corona = exp(-max(cr, 0.0) * mix(7.4, 3.35, coronaShape)) * coronaShape;
-  float tongues = smoothstep(0.62, 0.95, spike) * exp(-max(cr, 0.0) * 3.6);
-  tongues *= smoothstep(-0.02, 0.01, cr);
+  float corona = exp(-max(cr, 0.0) * mix(6.2, 2.45, coronaShape)) * coronaShape;
+  float tongues = smoothstep(0.55, 0.94, spike) * exp(-max(cr, 0.0) * 2.9);
+  tongues *= smoothstep(-0.03, 0.012, cr);
 
   vec3 coronaCol = mix(vec3(0.78, 0.12, 0.03), vec3(1.0, 0.55, 0.16), spike);
   vec3 tongueCol = vec3(1.0, 0.42, 0.08);

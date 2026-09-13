@@ -5,7 +5,7 @@ import { Reveal } from "./Reveal";
 
 export function Principles() {
   return (
-    <section className="relative px-6 py-24 sm:py-32">
+    <section className="relative flex min-h-[88svh] items-center px-6 py-32 sm:py-40">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <p className="mx-auto max-w-2xl text-center font-serif text-[1.45rem] font-light leading-snug text-ivory/80 sm:text-[1.85rem]">
@@ -25,7 +25,7 @@ export function Principles() {
                 <h3 className="font-serif text-[2rem] font-light leading-none tracking-[-0.02em] text-ivory sm:text-[2.35rem]">
                   {item.title}
                 </h3>
-                <p className="mt-3 font-sans text-[0.72rem] tracking-[0.22em] text-ivory/45 uppercase">
+                <p className="mt-3 font-sans text-[0.72rem] tracking-[0.22em] text-ivory/55 uppercase">
                   {item.aside}
                 </p>
               </article>

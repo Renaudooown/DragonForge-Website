@@ -40,7 +40,7 @@ export function Hero() {
             {hero.line}
           </motion.p>
           <motion.p
-            className="mt-3 font-serif text-sm font-light italic tracking-[0.04em] text-ivory/45 sm:text-[0.95rem]"
+            className="mt-3 font-serif text-sm font-light italic tracking-[0.04em] text-ivory/62 sm:text-[0.95rem]"
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.4, delay: 1.2, ease }}
@@ -52,7 +52,7 @@ export function Hero() {
 
       <motion.a
         href="#transmission"
-        className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 text-ivory/40 transition-colors hover:text-ivory/70"
+        className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 text-ivory/58 transition-colors hover:text-ivory/85"
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 1.8 }}

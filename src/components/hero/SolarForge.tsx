@@ -36,7 +36,7 @@ type Ember = {
 
 function spawnEmber(w: number, h: number, pointer: Pointer): Ember {
   const min = Math.min(w, h);
-  const rad = min * 0.31;
+  const rad = min * 0.345;
   const ang = Math.random() * Math.PI * 2;
   const cx = w * 0.5 + pointer.x * min * 0.02;
   const cy = h * 0.43 + pointer.y * min * 0.02;
@@ -97,6 +97,7 @@ export function SolarForge() {
     let locPointer: WebGLUniformLocation | null = null;
     let locIntro: WebGLUniformLocation | null = null;
     let locFade: WebGLUniformLocation | null = null;
+    let locLift: WebGLUniformLocation | null = null;
 
     if (gl) {
       const vs = compile(gl, gl.VERTEX_SHADER, vertexShader);
@@ -134,6 +135,7 @@ export function SolarForge() {
       locPointer = gl.getUniformLocation(program, "uPointer");
       locIntro = gl.getUniformLocation(program, "uIntro");
       locFade = gl.getUniformLocation(program, "uFade");
+      locLift = gl.getUniformLocation(program, "uLift");
       wrap.dataset.gl = "ready";
     }
 
@@ -201,6 +203,8 @@ export function SolarForge() {
         gl.uniform2f(locPointer, pointer.x, pointer.y);
         gl.uniform1f(locIntro, intro);
         gl.uniform1f(locFade, fade);
+        const aspect = glCanvas.width / Math.max(glCanvas.height, 1);
+        gl.uniform1f(locLift, aspect < 0.85 ? 0.02 : 0.055);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       }
 
