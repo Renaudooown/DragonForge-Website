@@ -58,9 +58,10 @@ export function Scene() {
     offset: ["start start", "end start"],
   });
 
-  const sunX = useTransform(scrollYProgress, [0, 0.4], ["0%", "18%"]);
-  const sunY = useTransform(scrollYProgress, [0, 0.4], ["0%", "-24%"]);
-  const sunScale = useTransform(scrollYProgress, [0, 0.45], [1, 1.38]);
+  const sunX = useTransform(scrollYProgress, [0, 0.36], ["0%", "18%"]);
+  const sunY = useTransform(scrollYProgress, [0, 0.36], ["0%", "-24%"]);
+  const sunScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.38]);
+  const sunOpacity = useTransform(scrollYProgress, [0, 0.2, 0.4], [1, 1, 0]);
   const typeOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
   const typeY = useTransform(scrollYProgress, [0, 0.12], [0, -24]);
 
@@ -71,7 +72,9 @@ export function Scene() {
           <motion.div
             className="h-full w-full origin-[84%_12%]"
             style={
-              reduce ? undefined : { x: sunX, y: sunY, scale: sunScale }
+              reduce
+                ? undefined
+                : { x: sunX, y: sunY, scale: sunScale, opacity: sunOpacity }
             }
           >
             <SolarForge />
