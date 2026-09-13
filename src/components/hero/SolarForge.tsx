@@ -153,7 +153,7 @@ export function SolarForge() {
       gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
       gl.useProgram(program);
       gl.enable(gl.BLEND);
-      gl.blendFunc(gl.ONE, gl.ONE);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
       locTime = gl.getUniformLocation(program, "uTime");
       locRes = gl.getUniformLocation(program, "uRes");
       locPointer = gl.getUniformLocation(program, "uPointer");
@@ -277,14 +277,8 @@ export function SolarForge() {
     >
       <div className="sun-atmosphere" />
       <div className="sun-fallback" />
-      <canvas
-        ref={glRef}
-        className="absolute inset-0 h-full w-full mix-blend-screen"
-      />
-      <canvas
-        ref={emberRef}
-        className="absolute inset-0 h-full w-full mix-blend-screen"
-      />
+      <canvas ref={glRef} className="absolute inset-0 h-full w-full" />
+      <canvas ref={emberRef} className="absolute inset-0 h-full w-full" />
     </div>
   );
 }

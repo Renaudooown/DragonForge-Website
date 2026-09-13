@@ -67,7 +67,7 @@ export function Scene() {
   return (
     <div ref={sceneRef} className="relative">
       <div className="pointer-events-none absolute inset-0 z-0">
-        <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <div className="sticky top-0 h-[100svh] overflow-hidden bg-navy [isolation:isolate]">
           <motion.div
             className="h-full w-full origin-[84%_12%]"
             style={

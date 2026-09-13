@@ -5,7 +5,7 @@ import { Reveal } from "./Reveal";
 
 export function Principles() {
   return (
-    <section className="relative px-[8vw] py-32 sm:py-40">
+    <section className="relative z-20 bg-navy px-[8vw] py-32 sm:py-40">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <p className="max-w-xl font-serif text-[1.45rem] font-light leading-snug text-ivory/78 sm:text-[1.85rem]">

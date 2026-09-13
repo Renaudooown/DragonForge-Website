@@ -168,7 +168,8 @@ void main() {
 
   col *= uIntro;
   col = max(col, vec3(0.0));
+  float alpha = clamp(max(max(col.r, col.g), col.b) * 1.25, 0.0, 1.0);
 
-  gl_FragColor = vec4(col, 1.0);
+  gl_FragColor = vec4(col * alpha, alpha);
 }
 `;
