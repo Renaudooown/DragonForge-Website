@@ -24,24 +24,24 @@ function HeroType({
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative flex h-[100svh] min-h-[640px] items-end px-6 pb-16 sm:items-center sm:px-[8vw] sm:pb-0 sm:pt-[18vh]">
+    <section className="relative z-10 h-[100svh] min-h-[640px]">
       <motion.div
-        className="max-w-xl"
+        className="absolute bottom-[16vh] left-6 max-w-[16ch] sm:bottom-[20vh] sm:left-[7vw]"
         style={reduce ? undefined : { opacity, y }}
       >
         <motion.h1
-          className="font-serif text-[clamp(2.4rem,6vw,4.75rem)] font-light leading-[0.95] tracking-[0.06em] text-ivory"
-          initial={reduce ? false : { opacity: 0, y: 16 }}
+          className="font-serif text-[clamp(2.6rem,6.2vw,5.1rem)] font-light leading-[0.92] tracking-[0.01em] text-ivory"
+          initial={reduce ? false : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, delay: 0.45, ease }}
+          transition={{ duration: 1.6, delay: 0.4, ease }}
         >
           {hero.wordmark}
         </motion.h1>
         <motion.p
-          className="mt-7 max-w-sm font-sans text-[0.72rem] font-normal tracking-[0.28em] text-ivory/68 uppercase sm:text-[0.78rem]"
-          initial={reduce ? false : { opacity: 0, y: 10 }}
+          className="mt-8 max-w-[22ch] font-sans text-[0.8rem] font-normal leading-relaxed tracking-[0.04em] text-ivory/58 sm:text-[0.86rem]"
+          initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.3, delay: 0.85, ease }}
+          transition={{ duration: 1.4, delay: 0.9, ease }}
         >
           {hero.line}
         </motion.p>
@@ -58,31 +58,20 @@ export function Scene() {
     offset: ["start start", "end start"],
   });
 
-  const sunX = useTransform(scrollYProgress, [0, 0.36], ["0%", "18%"]);
-  const sunY = useTransform(scrollYProgress, [0, 0.36], ["0%", "-24%"]);
-  const sunScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.38]);
-  const sunOpacity = useTransform(scrollYProgress, [0, 0.2, 0.4], [1, 1, 0]);
-  const typeOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
-  const typeY = useTransform(scrollYProgress, [0, 0.12], [0, -24]);
+  const sunFade = useTransform(scrollYProgress, [0, 0.16, 0.38], [1, 1, 0]);
+  const typeOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+  const typeY = useTransform(scrollYProgress, [0, 0.1], [0, -18]);
 
   return (
     <div ref={sceneRef} className="relative">
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <motion.div
-          className="h-full w-full origin-[84%_12%]"
-          style={
-            reduce
-              ? undefined
-              : { x: sunX, y: sunY, scale: sunScale, opacity: sunOpacity }
-          }
-        >
-          <SolarForge />
-        </motion.div>
+        <SolarForge
+          fade={reduce ? undefined : sunFade}
+          progress={reduce ? undefined : scrollYProgress}
+        />
       </div>
-      <div className="relative z-10">
-        <HeroType opacity={typeOpacity} y={typeY} />
-        <Manifesto />
-      </div>
+      <HeroType opacity={typeOpacity} y={typeY} />
+      <Manifesto />
     </div>
   );
 }

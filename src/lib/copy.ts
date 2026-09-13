@@ -11,10 +11,10 @@ export const hero = {
 };
 
 export const manifesto = {
-  kicker: "Transmission",
   inherit: [
-    "We inherited a world built by people",
-    "who believed in transmission —",
+    "We inherited a world",
+    "built by people who believed",
+    "in transmission —",
   ],
   qualities: [
     "of judgment,",
@@ -23,8 +23,8 @@ export const manifesto = {
     "and responsibility.",
   ],
   volta: ["Somewhere along the way,", "that chain weakened."],
+  restoreLead: "DragonForge exists to restore it:",
   restore: [
-    "DragonForge exists to restore it:",
     "to learn from those who came before us,",
     "to sharpen one another in the present,",
     "and to leave behind something stronger",

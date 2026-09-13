@@ -5,16 +5,10 @@ import { Reveal } from "./Reveal";
 
 export function Manifesto() {
   return (
-    <section id="transmission" className="relative px-[8vw]">
-      <div className="flex min-h-[100svh] flex-col justify-end pb-[16vh] pt-[18vh]">
+    <section id="transmission" className="relative z-10 px-[7vw]">
+      <div className="flex min-h-[100svh] flex-col justify-end pb-[18vh] pt-[12vh]">
         <Reveal>
-          <p className="mb-16 flex items-center gap-3 font-sans text-[0.68rem] tracking-[0.42em] text-ivory/45 uppercase">
-            <span className="inline-block h-1 w-1 rounded-full bg-red" />
-            {manifesto.kicker}
-          </p>
-        </Reveal>
-        <Reveal>
-          <p className="max-w-[13.5ch] font-serif text-[clamp(2rem,5.4vw,4.35rem)] font-light leading-[1.08] tracking-[-0.02em] text-ivory">
+          <p className="max-w-[11ch] font-serif text-[clamp(2.35rem,6.4vw,5.4rem)] font-light leading-[1.05] tracking-[-0.03em] text-ivory">
             {manifesto.inherit.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -24,9 +18,9 @@ export function Manifesto() {
         </Reveal>
       </div>
 
-      <div className="flex min-h-[85svh] flex-col justify-center py-12">
+      <div className="flex min-h-[88svh] flex-col justify-center py-10">
         <Reveal>
-          <ul className="max-w-md space-y-4 font-serif text-[clamp(1.35rem,2.4vw,2rem)] font-light italic leading-snug text-ivory/70">
+          <ul className="ml-auto max-w-[10ch] space-y-5 text-right font-serif text-[clamp(1.5rem,3vw,2.45rem)] font-light italic leading-[1.2] text-ivory/64">
             {manifesto.qualities.map((line) => (
               <li key={line}>{line}</li>
             ))}
@@ -34,9 +28,9 @@ export function Manifesto() {
         </Reveal>
       </div>
 
-      <div className="flex min-h-[90svh] flex-col justify-center py-12">
+      <div className="flex min-h-[92svh] flex-col justify-center py-10">
         <Reveal>
-          <p className="max-w-[12ch] font-serif text-[clamp(2.1rem,5vw,4.1rem)] font-light italic leading-[1.08] tracking-[-0.02em] text-ivory sm:ml-[18vw]">
+          <p className="max-w-[13ch] font-serif text-[clamp(2.2rem,5.2vw,4.4rem)] font-light italic leading-[1.06] tracking-[-0.025em] text-ivory sm:ml-[12vw]">
             {manifesto.volta.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -46,9 +40,14 @@ export function Manifesto() {
         </Reveal>
       </div>
 
-      <div className="flex min-h-[90svh] flex-col justify-center pb-[24vh] pt-12">
+      <div className="flex min-h-[96svh] flex-col justify-end pb-[22vh] pt-16">
         <Reveal>
-          <p className="max-w-2xl font-serif text-[clamp(1.35rem,2.6vw,2.15rem)] font-light leading-[1.45] text-ivory/78">
+          <p className="max-w-[18ch] font-serif text-[clamp(1.85rem,3.4vw,2.85rem)] font-light leading-[1.22] tracking-[-0.02em] text-ivory">
+            {manifesto.restoreLead}
+          </p>
+        </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mt-16 max-w-[22ch] font-serif text-[clamp(1.2rem,2.1vw,1.7rem)] font-light leading-[1.55] text-ivory/70">
             {manifesto.restore.map((line) => (
               <span key={line} className="block">
                 {line}

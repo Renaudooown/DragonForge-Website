@@ -9,10 +9,10 @@
   --red: #c43a2a;
   --ember: #c43a1c;
   --solar: #d85a22;
-  --sun-core: #e07a32;
-  --sun-hot: #c44a18;
-  --sun-mid: #9a220c;
-  --sun-deep: #4a0808;
+  --sun-core: #b43a12;
+  --sun-hot: #8a1e0a;
+  --sun-mid: #5a0c08;
+  --sun-deep: #1c0306;
 }
 
 @theme inline {
@@ -50,66 +50,71 @@ body {
   position: fixed;
   inset: 0;
   z-index: 40;
-  opacity: 0.032;
+  opacity: 0.018;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 420px 420px;
 }
 
 .sun-stage {
-  --sun-x: 84%;
-  --sun-y: 18%;
+  --sun-x: 96%;
+  --sun-y: 4%;
+}
+
+.sun-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .sun-atmosphere {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 42% 58% at var(--sun-x) var(--sun-y),
-    rgba(168, 38, 10, 0.22) 0%,
-    rgba(110, 18, 8, 0.08) 34%,
-    transparent 62%
+    ellipse 38% 46% at var(--sun-x) var(--sun-y),
+    rgba(140, 28, 8, 0.2) 0%,
+    rgba(88, 12, 6, 0.07) 28%,
+    transparent 58%
   );
 }
 
 .sun-fallback {
   position: absolute;
-  width: min(92vw, 980px);
-  height: min(92vw, 980px);
-  top: -22%;
-  right: -28%;
+  width: min(120vw, 1280px);
+  height: min(120vw, 1280px);
+  top: -38%;
+  right: -42%;
   left: auto;
   border-radius: 50%;
   background: radial-gradient(
-    circle at 38% 42%,
+    circle at 36% 40%,
     var(--sun-core) 0%,
-    var(--sun-hot) 28%,
-    var(--sun-mid) 52%,
+    var(--sun-hot) 30%,
+    var(--sun-mid) 54%,
     var(--sun-deep) 78%,
-    #1a0206 100%
+    transparent 100%
   );
-  box-shadow:
-    0 0 80px 20px rgba(160, 32, 8, 0.22),
-    0 0 180px 60px rgba(90, 10, 8, 0.12);
-  filter: blur(0.5px);
-  opacity: 0.9;
-  transition: opacity 0.8s ease;
+  filter: blur(0.4px);
+  opacity: 0.92;
 }
 
 .sun-stage[data-gl="ready"] .sun-fallback {
-  opacity: 0;
+  display: none;
 }
 
 @media (max-width: 768px) {
   .sun-stage {
-    --sun-x: 78%;
-    --sun-y: 6%;
+    --sun-x: 108%;
+    --sun-y: -6%;
   }
 
   .sun-fallback {
-    width: min(160vw, 920px);
-    height: min(160vw, 920px);
-    top: -48%;
-    right: -58%;
+    width: min(170vw, 980px);
+    height: min(170vw, 980px);
+    top: -58%;
+    right: -62%;
   }
 }
 
