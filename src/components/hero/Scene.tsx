@@ -58,32 +58,27 @@ export function Scene() {
     offset: ["start start", "end start"],
   });
 
-  const sunX = useTransform(scrollYProgress, [0, 0.34], ["0%", "16%"]);
-  const sunY = useTransform(scrollYProgress, [0, 0.34], ["0%", "-20%"]);
-  const sunScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.32]);
-  const sunOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.14, 0.32],
-    [1, 0.92, 0],
-  );
-  const typeOpacity = useTransform(scrollYProgress, [0, 0.14], [1, 0]);
-  const typeY = useTransform(scrollYProgress, [0, 0.14], [0, -24]);
+  const sunX = useTransform(scrollYProgress, [0, 0.4], ["0%", "18%"]);
+  const sunY = useTransform(scrollYProgress, [0, 0.4], ["0%", "-24%"]);
+  const sunScale = useTransform(scrollYProgress, [0, 0.45], [1, 1.38]);
+  const typeOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  const typeY = useTransform(scrollYProgress, [0, 0.12], [0, -24]);
 
   return (
     <div ref={sceneRef} className="relative">
-      <motion.div className="sticky top-0 z-0 h-[100svh] overflow-hidden">
-        <motion.div
-          className="absolute inset-0 origin-[84%_18%]"
-          style={
-            reduce
-              ? undefined
-              : { x: sunX, y: sunY, scale: sunScale, opacity: sunOpacity }
-          }
-        >
-          <SolarForge />
-        </motion.div>
-      </motion.div>
-      <div className="relative z-10 -mt-[100svh]">
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="sticky top-0 h-[100svh] overflow-hidden">
+          <motion.div
+            className="h-full w-full origin-[84%_12%]"
+            style={
+              reduce ? undefined : { x: sunX, y: sunY, scale: sunScale }
+            }
+          >
+            <SolarForge />
+          </motion.div>
+        </div>
+      </div>
+      <div className="relative z-10">
         <HeroType opacity={typeOpacity} y={typeY} />
         <Manifesto />
       </div>
