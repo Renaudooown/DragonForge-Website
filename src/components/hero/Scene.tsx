@@ -67,19 +67,17 @@ export function Scene() {
 
   return (
     <div ref={sceneRef} className="relative">
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div className="sticky top-0 h-[100svh] overflow-hidden bg-navy [isolation:isolate]">
-          <motion.div
-            className="h-full w-full origin-[84%_12%]"
-            style={
-              reduce
-                ? undefined
-                : { x: sunX, y: sunY, scale: sunScale, opacity: sunOpacity }
-            }
-          >
-            <SolarForge />
-          </motion.div>
-        </div>
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <motion.div
+          className="h-full w-full origin-[84%_12%]"
+          style={
+            reduce
+              ? undefined
+              : { x: sunX, y: sunY, scale: sunScale, opacity: sunOpacity }
+          }
+        >
+          <SolarForge />
+        </motion.div>
       </div>
       <div className="relative z-10">
         <HeroType opacity={typeOpacity} y={typeY} />
