@@ -62,11 +62,11 @@ function layoutFor(width: number, height: number) {
   const portrait = height > width * 1.08;
   if (portrait) {
     return {
-      origin: { x: 0.1, y: 0.52 },
-      radius: 0.74,
-      cssX: "62%",
-      cssY: "8%",
-      ember: { x: 0.58, y: 0.14 },
+      origin: { x: 0.46, y: 0.58 },
+      radius: 0.82,
+      cssX: "78%",
+      cssY: "6%",
+      ember: { x: 0.78, y: 0.12 },
     };
   }
   return {

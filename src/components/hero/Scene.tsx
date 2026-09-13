@@ -38,7 +38,7 @@ function HeroType({
           {hero.wordmark}
         </motion.h1>
         <motion.p
-          className="mt-7 max-w-sm font-sans text-[0.72rem] font-normal tracking-[0.28em] text-ivory/55 uppercase sm:text-[0.78rem]"
+          className="mt-7 max-w-sm font-sans text-[0.72rem] font-normal tracking-[0.28em] text-ivory/68 uppercase sm:text-[0.78rem]"
           initial={reduce ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.3, delay: 0.85, ease }}
@@ -58,28 +58,30 @@ export function Scene() {
     offset: ["start start", "end start"],
   });
 
-  const sunX = useTransform(scrollYProgress, [0, 0.42], ["0%", "12%"]);
-  const sunY = useTransform(scrollYProgress, [0, 0.42], ["0%", "-16%"]);
-  const sunScale = useTransform(scrollYProgress, [0, 0.48], [1, 1.22]);
+  const sunX = useTransform(scrollYProgress, [0, 0.34], ["0%", "16%"]);
+  const sunY = useTransform(scrollYProgress, [0, 0.34], ["0%", "-20%"]);
+  const sunScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.32]);
   const sunOpacity = useTransform(
     scrollYProgress,
-    [0, 0.16, 0.38],
-    [1, 0.88, 0],
+    [0, 0.14, 0.32],
+    [1, 0.92, 0],
   );
-  const typeOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
-  const typeY = useTransform(scrollYProgress, [0, 0.18], [0, -28]);
+  const typeOpacity = useTransform(scrollYProgress, [0, 0.14], [1, 0]);
+  const typeY = useTransform(scrollYProgress, [0, 0.14], [0, -24]);
 
   return (
     <div ref={sceneRef} className="relative">
-      <motion.div
-        className="sticky top-0 z-0 h-[100svh] overflow-hidden"
-        style={
-          reduce
-            ? undefined
-            : { x: sunX, y: sunY, scale: sunScale, opacity: sunOpacity }
-        }
-      >
-        <SolarForge />
+      <motion.div className="sticky top-0 z-0 h-[100svh] overflow-hidden">
+        <motion.div
+          className="absolute inset-0 origin-[84%_18%]"
+          style={
+            reduce
+              ? undefined
+              : { x: sunX, y: sunY, scale: sunScale, opacity: sunOpacity }
+          }
+        >
+          <SolarForge />
+        </motion.div>
       </motion.div>
       <div className="relative z-10 -mt-[100svh]">
         <HeroType opacity={typeOpacity} y={typeY} />

@@ -63,11 +63,10 @@ body {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 70% 78% at var(--sun-x) var(--sun-y),
-    rgba(180, 42, 12, 0.28) 0%,
-    rgba(140, 22, 8, 0.14) 28%,
-    rgba(80, 8, 12, 0.06) 48%,
-    transparent 70%
+    ellipse 42% 58% at var(--sun-x) var(--sun-y),
+    rgba(168, 38, 10, 0.22) 0%,
+    rgba(110, 18, 8, 0.08) 34%,
+    transparent 62%
   );
 }
 
@@ -101,15 +100,15 @@ body {
 
 @media (max-width: 768px) {
   .sun-stage {
-    --sun-x: 62%;
-    --sun-y: 8%;
+    --sun-x: 78%;
+    --sun-y: 6%;
   }
 
   .sun-fallback {
-    width: min(140vw, 820px);
-    height: min(140vw, 820px);
-    top: -38%;
-    right: -42%;
+    width: min(160vw, 920px);
+    height: min(160vw, 920px);
+    top: -48%;
+    right: -58%;
   }
 }
 

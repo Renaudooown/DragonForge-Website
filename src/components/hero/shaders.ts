@@ -129,8 +129,8 @@ void main() {
   vec3 colDeep = vec3(0.16, 0.015, 0.008);
   vec3 colEmber = vec3(0.48, 0.06, 0.015);
   vec3 colMid = vec3(0.78, 0.18, 0.035);
-  vec3 colHot = vec3(0.92, 0.36, 0.07);
-  vec3 colAmber = vec3(0.95, 0.50, 0.14);
+  vec3 colHot = vec3(0.96, 0.40, 0.07);
+  vec3 colAmber = vec3(0.98, 0.56, 0.14);
 
   vec3 photo = mix(colDeep, colEmber, smoothstep(0.04, 0.38, limb));
   photo = mix(photo, colMid, smoothstep(0.22, 0.62, limb * (0.55 + 0.45 * surface)));
@@ -141,11 +141,10 @@ void main() {
   photo *= 1.0 - umbra * 0.55;
   photo *= 0.96 + 0.04 * sin(t * 0.35 + surface * 9.0);
 
-  float disc = smoothstep(rad + 0.01, rad - 0.004, r);
-  float rim = exp(-pow(abs(r - rad) * 70.0, 2.0));
-
   float ang = atan(uvw.y, uvw.x);
   float warp = fbm2(vec2(ang * 2.1, t * 0.07)) - 0.5;
+  float disc = smoothstep(rad + 0.018 + warp * 0.05, rad - 0.006, r);
+  float rim = exp(-pow(abs(r - rad) * 58.0, 2.0));
   float cr = (r - rad) + warp * 0.07;
 
   float spike = fbm2(vec2(ang * 2.35 + t * 0.055, t * 0.08));
@@ -163,9 +162,9 @@ void main() {
 
   vec3 col = vec3(0.0);
   col += photo * disc;
-  col += rimCol * rim * 0.7;
-  col += coronaCol * corona * 0.78;
-  col += tongueCol * tongues * 0.52;
+  col += rimCol * rim * 0.95;
+  col += coronaCol * corona * 0.95;
+  col += tongueCol * tongues * 0.72;
 
   col *= uIntro;
   col = max(col, vec3(0.0));
