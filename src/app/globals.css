@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #00022c;
+  --navy-deep: #000018;
+  --ivory: #f3ede1;
+  --ivory-dim: rgba(243, 237, 225, 0.72);
+  --ivory-mute: rgba(243, 237, 225, 0.42);
+  --red: #c43a2a;
+  --ember: #e24a24;
+  --solar: #ff8a3a;
+  --sun-core: #fff4d2;
+  --sun-hot: #ffb44a;
+  --sun-mid: #ff6a24;
+  --sun-deep: #9a1408;
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-ivory: var(--ivory);
+  --color-red: var(--red);
+  --color-ember: var(--ember);
+  --color-solar: var(--solar);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-cormorant);
+}
+
+html {
+  background: var(--navy);
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--navy);
+  color: var(--ivory);
+  font-family: var(--font-inter), "Helvetica Neue", Helvetica, sans-serif;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--red);
+  color: var(--ivory);
+}
+
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.sun-stage {
+  --sun-x: 50%;
+  --sun-y: 43%;
+  --sun-scroll: 0;
+  transform: translate3d(0, calc(var(--sun-scroll) * 36px), 0)
+    scale(calc(1 - var(--sun-scroll) * 0.08));
+  transform-origin: 50% 46%;
+  will-change: transform;
+}
+
+.sun-atmosphere,
+.sun-vignette {
+  position: absolute;
+  inset: 0;
+}
+
+.sun-atmosphere {
+  background:
+    radial-gradient(
+      ellipse 52% 48% at var(--sun-x) var(--sun-y),
+      rgba(255, 196, 92, 0.22) 0%,
+      rgba(255, 122, 36, 0.14) 22%,
+      rgba(196, 36, 18, 0.1) 38%,
+      rgba(80, 8, 20, 0.06) 54%,
+      transparent 72%
+    ),
+    radial-gradient(
+      circle at var(--sun-x) var(--sun-y),
+      rgba(255, 88, 24, 0.16) 0%,
+      transparent 46%
+    );
+  animation: atmosphere-breathe 9s ease-in-out infinite;
+}
+
+.sun-fallback {
+  position: absolute;
+  width: min(46vw, 430px);
+  height: min(46vw, 430px);
+  margin: 0 auto;
+  top: 43%;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  border-radius: 50%;
+  translate: 0 -50%;
+  background: radial-gradient(
+    circle at 42% 38%,
+    var(--sun-core) 0%,
+    var(--sun-hot) 22%,
+    var(--sun-mid) 46%,
+    var(--sun-deep) 72%,
+    #3a0408 100%
+  );
+  box-shadow:
+    0 0 48px 18px rgba(255, 150, 50, 0.28),
+    0 0 120px 48px rgba(255, 70, 20, 0.16),
+    0 0 220px 90px rgba(160, 16, 8, 0.12);
+  filter: blur(0.4px);
+  opacity: 0.92;
+  animation: sun-pulse 7s ease-in-out infinite;
+  transition: opacity 0.8s ease;
+}
+
+.sun-stage[data-gl="ready"] .sun-fallback {
+  opacity: 0;
+}
+
+.sun-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 42%,
+    rgba(0, 2, 28, 0.28) 78%,
+    rgba(0, 1, 16, 0.55) 100%
+  );
+}
+
+.manifesto-wash {
+  background: linear-gradient(
+    to bottom,
+    rgba(180, 28, 12, 0.14) 0%,
+    rgba(0, 2, 44, 0) 34%
+  );
+}
+
+.scroll-line {
+  transform-origin: top;
+  animation: scroll-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes atmosphere-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    filter: saturate(1);
+  }
+  50% {
+    opacity: 0.86;
+    filter: saturate(1.08);
+  }
+}
+
+@keyframes sun-pulse {
+  0%,
+  100% {
+    filter: blur(0.4px) saturate(1);
+  }
+  50% {
+    filter: blur(0.4px) saturate(1.08);
+  }
+}
+
+@keyframes scroll-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .sun-atmosphere,
+  .sun-fallback,
+  .scroll-line,
+  .sun-stage {
+    animation: none !important;
+    transform: none;
+  }
+}
