@@ -8,17 +8,27 @@ export const site = {
 export const hero = {
   wordmark: "DragonForge",
   line: "The next generation of GPs and LPs.",
-  subline: "Built on transmission. Driven by legacy.",
-  scroll: "Scroll",
 };
 
 export const manifesto = {
   kicker: "Transmission",
-  heading: ["Legacy is built,", "not claimed."],
-  paragraphs: [
-    "We inherited a world built by people who believed in transmission — of judgment, ambition, standards, and responsibility.",
-    "Somewhere along the way, that chain loosened.",
-    "DragonForge exists to restore it. To learn from those who came before. To sharpen one another. To leave behind a generation stronger than the one we found.",
+  inherit: [
+    "We inherited a world built by people",
+    "who believed in transmission —",
+  ],
+  qualities: [
+    "of judgment,",
+    "of standards,",
+    "of ambition,",
+    "and responsibility.",
+  ],
+  volta: ["Somewhere along the way,", "that chain weakened."],
+  restore: [
+    "DragonForge exists to restore it:",
+    "to learn from those who came before us,",
+    "to sharpen one another in the present,",
+    "and to leave behind something stronger",
+    "than what we found.",
   ],
 };
 

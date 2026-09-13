@@ -14,8 +14,8 @@ uniform vec2 uRes;
 uniform float uTime;
 uniform vec2 uPointer;
 uniform float uIntro;
-uniform float uFade;
-uniform float uLift;
+uniform vec2 uOrigin;
+uniform float uRadius;
 
 float hash(vec2 p) {
   p = fract(p * vec2(127.1, 311.7));
@@ -75,10 +75,10 @@ float fbm2(vec2 p) {
 float fbm3(vec3 p) {
   float v = 0.0;
   float a = 0.5;
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     v += a * noise3(p);
-    p = p * 2.11 + vec3(1.3, 0.7, 2.1);
-    a *= 0.5;
+    p = p * 2.13 + vec3(1.3, 0.7, 2.1);
+    a *= 0.52;
   }
   return v;
 }
@@ -97,73 +97,77 @@ vec3 rotateX(vec3 p, float a) {
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / min(uRes.x, uRes.y);
-  uv -= uPointer * 0.038;
+  uv -= uPointer * 0.014;
+  uv -= uOrigin;
 
-  float t = uTime;
-  float breath = 0.01 * sin(t * 0.32);
-  float rad = 0.348 + breath;
+  float t = uTime * 0.38;
+  float rad = uRadius + 0.006 * sin(t * 0.48);
 
-  uv.y -= uLift;
+  float heat = fbm2(uv * 2.4 + vec2(t * 0.09, -t * 0.05));
+  vec2 uvw = uv + normalize(uv + 1e-5) * 0.018 * (heat - 0.48);
 
-  float r = length(uv);
-  float inside = rad * rad - dot(uv, uv);
+  float r = length(uvw);
+  float inside = rad * rad - dot(uvw, uvw);
   float z = sqrt(max(inside, 0.0));
-  vec3 nrm = normalize(vec3(uv, z));
+  vec3 nrm = normalize(vec3(uvw, z));
 
-  vec3 sp = rotateX(nrm, 0.42);
-  sp = rotateY(sp, t * 0.046);
-  sp += 0.04 * vec3(sin(t * 0.07), cos(t * 0.05), sin(t * 0.04));
+  vec3 sp = rotateX(nrm, 0.58);
+  sp = rotateY(sp, t * 0.022);
+  sp += 0.22 * (fbm3(sp * 2.4 + t * 0.03) * 2.0 - 1.0) * vec3(0.35, 0.2, 0.35);
 
-  float gran = fbm3(sp * 3.8);
-  float granFine = fbm3(sp * 9.5 + vec3(t * 0.05));
-  float surface = gran * 0.72 + granFine * 0.28;
+  float gran = fbm3(sp * 5.6);
+  float granFine = fbm3(sp * 16.0 + vec3(t * 0.028));
+  float lanes = fbm3(sp * 2.1 + 3.7);
+  float surface = gran * 0.58 + granFine * 0.42;
+  surface = mix(surface, lanes, 0.22);
 
-  float spots = smoothstep(0.58, 0.78, fbm3(sp * 1.65 + 5.4));
-  float umbra = smoothstep(0.72, 0.9, fbm3(sp * 1.65 + 5.4));
+  float spots = smoothstep(0.52, 0.78, fbm3(sp * 1.45 + 6.1));
+  float umbra = smoothstep(0.68, 0.9, fbm3(sp * 1.45 + 6.1));
 
-  float limb = pow(clamp(nrm.z, 0.0, 1.0), 0.5);
+  float limb = pow(clamp(nrm.z, 0.0, 1.0), 0.62);
 
-  vec3 colDeep = vec3(0.42, 0.045, 0.012);
-  vec3 colMid = vec3(0.96, 0.30, 0.055);
-  vec3 colHot = vec3(1.0, 0.70, 0.24);
-  vec3 colCore = vec3(1.0, 0.96, 0.84);
+  vec3 colDeep = vec3(0.16, 0.015, 0.008);
+  vec3 colEmber = vec3(0.48, 0.06, 0.015);
+  vec3 colMid = vec3(0.78, 0.18, 0.035);
+  vec3 colHot = vec3(0.92, 0.36, 0.07);
+  vec3 colAmber = vec3(0.95, 0.50, 0.14);
 
-  vec3 photo = mix(colDeep, colMid, smoothstep(0.12, 0.52, limb));
-  photo = mix(photo, colHot, smoothstep(0.42, 0.84, limb * (0.7 + 0.3 * surface)));
-  photo = mix(photo, colCore, pow(limb, 3.8) * smoothstep(0.4, 0.85, surface));
-  photo *= 0.62 + 0.9 * surface * mix(0.75, 1.08, limb);
-  photo *= 1.0 - spots * 0.38;
-  photo *= 1.0 - umbra * 0.45;
-  photo *= 0.94 + 0.06 * sin(t * 0.55 + surface * 8.0);
+  vec3 photo = mix(colDeep, colEmber, smoothstep(0.04, 0.38, limb));
+  photo = mix(photo, colMid, smoothstep(0.22, 0.62, limb * (0.55 + 0.45 * surface)));
+  photo = mix(photo, colHot, smoothstep(0.48, 0.86, limb * surface));
+  photo = mix(photo, colAmber, pow(limb, 5.5) * smoothstep(0.55, 0.92, surface) * 0.55);
+  photo *= 0.38 + 1.05 * surface;
+  photo *= 1.0 - spots * 0.48;
+  photo *= 1.0 - umbra * 0.55;
+  photo *= 0.96 + 0.04 * sin(t * 0.35 + surface * 9.0);
 
-  float disc = smoothstep(rad + 0.008, rad - 0.003, r);
-  float rim = exp(-pow(abs(r - rad) * 92.0, 2.0)) * (0.55 + 0.45 * limb);
+  float disc = smoothstep(rad + 0.01, rad - 0.004, r);
+  float rim = exp(-pow(abs(r - rad) * 70.0, 2.0));
 
-  float ang = atan(uv.y, uv.x);
-  float warp = fbm2(vec2(ang * 2.4, t * 0.13)) - 0.5;
-  float cr = (r - rad) + warp * 0.05;
+  float ang = atan(uvw.y, uvw.x);
+  float warp = fbm2(vec2(ang * 2.1, t * 0.07)) - 0.5;
+  float cr = (r - rad) + warp * 0.07;
 
-  float spike = fbm2(vec2(ang * 2.7 + t * 0.11, t * 0.16));
-  float spike2 = fbm2(vec2(ang * 5.6 - t * 0.07, 3.1 + t * 0.09));
-  float coronaShape = 0.36 + 0.64 * spike;
-  coronaShape *= 0.55 + 0.45 * spike2;
+  float spike = fbm2(vec2(ang * 2.35 + t * 0.055, t * 0.08));
+  float spike2 = fbm2(vec2(ang * 6.2 - t * 0.04, 4.0 + t * 0.05));
+  float coronaShape = 0.32 + 0.68 * spike;
+  coronaShape *= 0.5 + 0.5 * spike2;
 
-  float corona = exp(-max(cr, 0.0) * mix(6.2, 2.45, coronaShape)) * coronaShape;
-  float tongues = smoothstep(0.55, 0.94, spike) * exp(-max(cr, 0.0) * 2.9);
-  tongues *= smoothstep(-0.03, 0.012, cr);
+  float corona = exp(-max(cr, 0.0) * mix(5.6, 2.1, coronaShape)) * coronaShape;
+  float tongues = smoothstep(0.5, 0.93, spike) * exp(-max(cr, 0.0) * 2.35);
+  tongues *= smoothstep(-0.04, 0.016, cr);
 
-  vec3 coronaCol = mix(vec3(0.78, 0.12, 0.03), vec3(1.0, 0.55, 0.16), spike);
-  vec3 tongueCol = vec3(1.0, 0.42, 0.08);
-  vec3 rimCol = vec3(1.0, 0.90, 0.68);
+  vec3 coronaCol = mix(vec3(0.42, 0.04, 0.01), vec3(0.86, 0.28, 0.05), spike);
+  vec3 tongueCol = vec3(0.9, 0.22, 0.04);
+  vec3 rimCol = vec3(0.88, 0.32, 0.08);
 
   vec3 col = vec3(0.0);
   col += photo * disc;
-  col += rimCol * rim * 1.15;
-  col += coronaCol * corona * 0.92;
-  col += tongueCol * tongues * 0.62;
-  col += colCore * pow(limb, 6.0) * disc * 0.35;
+  col += rimCol * rim * 0.7;
+  col += coronaCol * corona * 0.78;
+  col += tongueCol * tongues * 0.52;
 
-  col *= uIntro * uFade;
+  col *= uIntro;
   col = max(col, vec3(0.0));
 
   gl_FragColor = vec4(col, 1.0);

@@ -1,13 +1,11 @@
-import { Hero } from "@/components/hero/Hero";
-import { Manifesto } from "@/components/Manifesto";
+import { Scene } from "@/components/hero/Scene";
 import { Principles } from "@/components/Principles";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export default function Home() {
   return (
     <main>
-      <Hero />
-      <Manifesto />
+      <Scene />
       <Principles />
       <SiteFooter />
     </main>

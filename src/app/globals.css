@@ -7,12 +7,12 @@
   --ivory-dim: rgba(243, 237, 225, 0.72);
   --ivory-mute: rgba(243, 237, 225, 0.42);
   --red: #c43a2a;
-  --ember: #e24a24;
-  --solar: #ff8a3a;
-  --sun-core: #fff4d2;
-  --sun-hot: #ffb44a;
-  --sun-mid: #ff6a24;
-  --sun-deep: #9a1408;
+  --ember: #c43a1c;
+  --solar: #d85a22;
+  --sun-core: #e07a32;
+  --sun-hot: #c44a18;
+  --sun-mid: #9a220c;
+  --sun-deep: #4a0808;
 }
 
 @theme inline {
@@ -49,71 +49,49 @@ body {
   position: fixed;
   inset: 0;
   z-index: 40;
-  opacity: 0.045;
+  opacity: 0.032;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .sun-stage {
-  --sun-x: 50%;
-  --sun-y: 43%;
-  --sun-scroll: 0;
-  transform: translate3d(0, calc(var(--sun-scroll) * 36px), 0)
-    scale(calc(1 - var(--sun-scroll) * 0.08));
-  transform-origin: 50% 46%;
-  will-change: transform;
-}
-
-.sun-atmosphere,
-.sun-vignette {
-  position: absolute;
-  inset: 0;
+  --sun-x: 84%;
+  --sun-y: 18%;
 }
 
 .sun-atmosphere {
-  background:
-    radial-gradient(
-      ellipse 58% 54% at var(--sun-x) var(--sun-y),
-      rgba(255, 196, 92, 0.26) 0%,
-      rgba(255, 122, 36, 0.16) 22%,
-      rgba(196, 36, 18, 0.11) 38%,
-      rgba(80, 8, 20, 0.07) 54%,
-      transparent 74%
-    ),
-    radial-gradient(
-      circle at var(--sun-x) var(--sun-y),
-      rgba(255, 88, 24, 0.16) 0%,
-      transparent 46%
-    );
-  animation: atmosphere-breathe 9s ease-in-out infinite;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 78% at var(--sun-x) var(--sun-y),
+    rgba(180, 42, 12, 0.28) 0%,
+    rgba(140, 22, 8, 0.14) 28%,
+    rgba(80, 8, 12, 0.06) 48%,
+    transparent 70%
+  );
 }
 
 .sun-fallback {
   position: absolute;
-  width: min(52vw, 500px);
-  height: min(52vw, 500px);
-  margin: 0 auto;
-  top: 43%;
-  left: 0;
-  right: 0;
-  bottom: auto;
+  width: min(92vw, 980px);
+  height: min(92vw, 980px);
+  top: -22%;
+  right: -28%;
+  left: auto;
   border-radius: 50%;
-  translate: 0 -50%;
   background: radial-gradient(
-    circle at 42% 38%,
+    circle at 38% 42%,
     var(--sun-core) 0%,
-    var(--sun-hot) 22%,
-    var(--sun-mid) 46%,
-    var(--sun-deep) 72%,
-    #3a0408 100%
+    var(--sun-hot) 28%,
+    var(--sun-mid) 52%,
+    var(--sun-deep) 78%,
+    #1a0206 100%
   );
   box-shadow:
-    0 0 48px 18px rgba(255, 150, 50, 0.28),
-    0 0 120px 48px rgba(255, 70, 20, 0.16),
-    0 0 220px 90px rgba(160, 16, 8, 0.12);
-  filter: blur(0.4px);
-  opacity: 0.92;
-  animation: sun-pulse 7s ease-in-out infinite;
+    0 0 80px 20px rgba(160, 32, 8, 0.22),
+    0 0 180px 60px rgba(90, 10, 8, 0.12);
+  filter: blur(0.5px);
+  opacity: 0.9;
   transition: opacity 0.8s ease;
 }
 
@@ -121,72 +99,22 @@ body {
   opacity: 0;
 }
 
-.sun-vignette {
-  background: radial-gradient(
-    ellipse at center,
-    transparent 42%,
-    rgba(0, 2, 28, 0.28) 78%,
-    rgba(0, 1, 16, 0.55) 100%
-  );
-}
-
-.manifesto-wash {
-  background: linear-gradient(
-    to bottom,
-    rgba(180, 28, 12, 0.14) 0%,
-    rgba(0, 2, 44, 0) 34%
-  );
-}
-
-.scroll-line {
-  transform-origin: top;
-  animation: scroll-pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes atmosphere-breathe {
-  0%,
-  100% {
-    opacity: 1;
-    filter: saturate(1);
+@media (max-width: 768px) {
+  .sun-stage {
+    --sun-x: 62%;
+    --sun-y: 8%;
   }
-  50% {
-    opacity: 0.86;
-    filter: saturate(1.08);
-  }
-}
 
-@keyframes sun-pulse {
-  0%,
-  100% {
-    filter: blur(0.4px) saturate(1);
-  }
-  50% {
-    filter: blur(0.4px) saturate(1.08);
-  }
-}
-
-@keyframes scroll-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-    transform: scaleY(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scaleY(1.12);
+  .sun-fallback {
+    width: min(140vw, 820px);
+    height: min(140vw, 820px);
+    top: -38%;
+    right: -42%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .sun-atmosphere,
-  .sun-fallback,
-  .scroll-line,
-  .sun-stage {
-    animation: none !important;
-    transform: none;
   }
 }

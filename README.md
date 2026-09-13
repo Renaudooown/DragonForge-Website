@@ -19,5 +19,6 @@ npm run build
 
 - **Copy** (hero, manifesto, principles, footer): `src/lib/copy.ts`
 - **Site colors** (navy, ivory, red, solar): `:root` in `src/app/globals.css`
-- **Hero sun visual**: `src/components/hero/SolarForge.tsx` (layers, particles, motion) and `src/components/hero/shaders.ts` (photosphere / corona)
-- **Hero layout and wordmark**: `src/components/hero/Hero.tsx`
+- **Hero sun visual**: `src/components/hero/SolarForge.tsx` and `src/components/hero/shaders.ts`
+- **Hero composition and scroll**: `src/components/hero/Scene.tsx`
+- **Manifesto layout**: `src/components/Manifesto.tsx`

@@ -34,23 +34,47 @@ type Ember = {
   y: number;
 };
 
-function spawnEmber(w: number, h: number, pointer: Pointer): Ember {
-  const min = Math.min(w, h);
-  const rad = min * 0.345;
-  const ang = Math.random() * Math.PI * 2;
-  const cx = w * 0.5 + pointer.x * min * 0.02;
-  const cy = h * 0.43 + pointer.y * min * 0.02;
-  const speed = 0.08 + Math.random() * 0.22;
+function spawnEmber(
+  w: number,
+  h: number,
+  origin: { x: number; y: number },
+  radius: number,
+): Ember {
+  const ang = -0.35 + Math.random() * 2.2;
+  const cx = origin.x * w;
+  const cy = origin.y * h;
+  const rad = radius * Math.min(w, h);
+  const speed = 0.04 + Math.random() * 0.12;
   return {
-    x: cx + Math.cos(ang) * rad * (0.92 + Math.random() * 0.18),
-    y: cy + Math.sin(ang) * rad * (0.92 + Math.random() * 0.18),
-    vx: Math.cos(ang) * speed,
-    vy: Math.sin(ang) * speed - (0.12 + Math.random() * 0.18),
-    r: 0.4 + Math.random() * 1.15,
-    a: 0.15 + Math.random() * 0.35,
+    x: cx + Math.cos(ang) * rad * (0.9 + Math.random() * 0.12),
+    y: cy + Math.sin(ang) * rad * (0.9 + Math.random() * 0.12),
+    vx: Math.cos(ang) * speed * 0.35,
+    vy: Math.sin(ang) * speed - 0.06,
+    r: 0.35 + Math.random() * 0.8,
+    a: 0.08 + Math.random() * 0.16,
     life: 0,
-    max: 90 + Math.random() * 160,
-    s: 0.6 + Math.random() * 0.8,
+    max: 140 + Math.random() * 180,
+    s: 0.45 + Math.random() * 0.5,
+  };
+}
+
+function layoutFor(width: number, height: number) {
+  const portrait = height > width * 1.08;
+  if (portrait) {
+    return {
+      origin: { x: 0.1, y: 0.52 },
+      radius: 0.74,
+      cssX: "62%",
+      cssY: "8%",
+      ember: { x: 0.58, y: 0.14 },
+    };
+  }
+  return {
+    origin: { x: 0.64, y: 0.26 },
+    radius: 0.7,
+    cssX: "84%",
+    cssY: "18%",
+    ember: { x: 0.82, y: 0.22 },
   };
 }
 
@@ -72,11 +96,11 @@ export function SolarForge() {
     const pointer: Pointer = { x: 0, y: 0 };
     const pointerTarget: Pointer = { x: 0, y: 0 };
     let intro = 0;
-    let fade = 1;
     let visible = true;
     let running = true;
     let raf = 0;
     const start = performance.now();
+    let layout = layoutFor(window.innerWidth, window.innerHeight);
 
     const gl =
       glCanvas.getContext("webgl", {
@@ -96,8 +120,8 @@ export function SolarForge() {
     let locRes: WebGLUniformLocation | null = null;
     let locPointer: WebGLUniformLocation | null = null;
     let locIntro: WebGLUniformLocation | null = null;
-    let locFade: WebGLUniformLocation | null = null;
-    let locLift: WebGLUniformLocation | null = null;
+    let locOrigin: WebGLUniformLocation | null = null;
+    let locRadius: WebGLUniformLocation | null = null;
 
     if (gl) {
       const vs = compile(gl, gl.VERTEX_SHADER, vertexShader);
@@ -134,22 +158,25 @@ export function SolarForge() {
       locRes = gl.getUniformLocation(program, "uRes");
       locPointer = gl.getUniformLocation(program, "uPointer");
       locIntro = gl.getUniformLocation(program, "uIntro");
-      locFade = gl.getUniformLocation(program, "uFade");
-      locLift = gl.getUniformLocation(program, "uLift");
+      locOrigin = gl.getUniformLocation(program, "uOrigin");
+      locRadius = gl.getUniformLocation(program, "uRadius");
       wrap.dataset.gl = "ready";
     }
 
     const emberCtx = emberCanvas.getContext("2d");
     const embers: Ember[] = [];
-    const mobile = window.matchMedia("(max-width: 768px)").matches;
-    const emberCount = reduceMotion ? 0 : mobile ? 18 : 36;
+    const emberCount = reduceMotion ? 0 : 8;
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
       const w = Math.max(1, Math.floor(rect.width));
       const h = Math.max(1, Math.floor(rect.height));
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.6);
-      const scale = mobile ? 0.5 : 0.72;
+      layout = layoutFor(w, h);
+      wrap.style.setProperty("--sun-x", layout.cssX);
+      wrap.style.setProperty("--sun-y", layout.cssY);
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const scale = w < 768 ? 0.52 : 0.7;
 
       glCanvas.style.width = `${w}px`;
       glCanvas.style.height = `${h}px`;
@@ -170,41 +197,26 @@ export function SolarForge() {
       pointerTarget.y = ((event.clientY - rect.top) / rect.height - 0.5) * -2;
     };
 
-    const onScroll = () => {
-      const rect = wrap.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, -rect.top / Math.max(rect.height, 1)));
-      fade = 1 - p * 0.62;
-      wrap.style.setProperty("--sun-scroll", p.toFixed(4));
-    };
-
     const tick = (now: number) => {
       if (!running) return;
       raf = requestAnimationFrame(tick);
       if (document.hidden || !visible) return;
 
       const t = (now - start) / 1000;
-      if (!reduceMotion) {
-        pointerTarget.x += Math.sin(t * 0.17) * 0.0022;
-        pointerTarget.y += Math.cos(t * 0.13) * 0.0016;
-      }
-      pointer.x += (pointerTarget.x - pointer.x) * 0.045;
-      pointer.y += (pointerTarget.y - pointer.y) * 0.045;
-      intro = Math.min(1, intro + (reduceMotion ? 1 : 0.012));
-
-      wrap.style.setProperty("--sun-x", `${50 + pointer.x * 2.2}%`);
-      wrap.style.setProperty("--sun-y", `${43 + pointer.y * -2.2}%`);
+      pointer.x += (pointerTarget.x - pointer.x) * 0.035;
+      pointer.y += (pointerTarget.y - pointer.y) * 0.035;
+      intro = Math.min(1, intro + (reduceMotion ? 1 : 0.008));
 
       if (gl && program) {
         gl.viewport(0, 0, glCanvas.width, glCanvas.height);
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.uniform1f(locTime, reduceMotion ? 8.5 : t);
+        gl.uniform1f(locTime, reduceMotion ? 12 : t);
         gl.uniform2f(locRes, glCanvas.width, glCanvas.height);
         gl.uniform2f(locPointer, pointer.x, pointer.y);
         gl.uniform1f(locIntro, intro);
-        gl.uniform1f(locFade, fade);
-        const aspect = glCanvas.width / Math.max(glCanvas.height, 1);
-        gl.uniform1f(locLift, aspect < 0.85 ? 0.02 : 0.055);
+        gl.uniform2f(locOrigin, layout.origin.x, layout.origin.y);
+        gl.uniform1f(locRadius, layout.radius);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       }
 
@@ -214,7 +226,7 @@ export function SolarForge() {
         emberCtx.clearRect(0, 0, w, h);
         emberCtx.globalCompositeOperation = "lighter";
         while (embers.length < emberCount) {
-          embers.push(spawnEmber(w, h, pointer));
+          embers.push(spawnEmber(w, h, layout.ember, layout.radius * 0.55));
         }
         for (let i = embers.length - 1; i >= 0; i -= 1) {
           const p = embers[i];
@@ -222,9 +234,9 @@ export function SolarForge() {
           p.x += p.vx * p.s;
           p.y += p.vy * p.s;
           const k = p.life / p.max;
-          const alpha = p.a * (1 - k) * intro * fade;
+          const alpha = p.a * (1 - k) * intro;
           emberCtx.beginPath();
-          emberCtx.fillStyle = `rgba(255, ${130 + p.r * 40}, 60, ${alpha})`;
+          emberCtx.fillStyle = `rgba(210, ${70 + p.r * 30}, 28, ${alpha})`;
           emberCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
           emberCtx.fill();
           if (p.life > p.max) embers.splice(i, 1);
@@ -233,7 +245,6 @@ export function SolarForge() {
     };
 
     resize();
-    onScroll();
     raf = requestAnimationFrame(tick);
 
     const ro = new ResizeObserver(resize);
@@ -248,7 +259,6 @@ export function SolarForge() {
     io.observe(wrap);
 
     window.addEventListener("pointermove", onPointer, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       running = false;
@@ -256,7 +266,6 @@ export function SolarForge() {
       ro.disconnect();
       io.disconnect();
       window.removeEventListener("pointermove", onPointer);
-      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
@@ -268,9 +277,14 @@ export function SolarForge() {
     >
       <div className="sun-atmosphere" />
       <div className="sun-fallback" />
-      <canvas ref={glRef} className="absolute inset-0 h-full w-full mix-blend-screen" />
-      <canvas ref={emberRef} className="absolute inset-0 h-full w-full mix-blend-screen" />
-      <div className="sun-vignette" />
+      <canvas
+        ref={glRef}
+        className="absolute inset-0 h-full w-full mix-blend-screen"
+      />
+      <canvas
+        ref={emberRef}
+        className="absolute inset-0 h-full w-full mix-blend-screen"
+      />
     </div>
   );
 }
