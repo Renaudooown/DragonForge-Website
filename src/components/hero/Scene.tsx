@@ -26,7 +26,7 @@ function HeroType({
   return (
     <section className="relative z-10 h-[100svh] min-h-[640px]">
       <motion.div
-        className="absolute bottom-[16vh] left-6 max-w-[16ch] sm:bottom-[20vh] sm:left-[7vw]"
+        className="absolute bottom-[16vh] left-6 sm:bottom-[20vh] sm:left-[7vw]"
         style={reduce ? undefined : { opacity, y }}
       >
         <motion.h1
@@ -38,7 +38,7 @@ function HeroType({
           {hero.wordmark}
         </motion.h1>
         <motion.p
-          className="mt-8 max-w-[22ch] font-sans text-[0.8rem] font-normal leading-relaxed tracking-[0.04em] text-ivory/58 sm:text-[0.86rem]"
+          className="mt-8 font-sans text-[0.8rem] font-normal tracking-[0.045em] text-ivory/58 sm:text-[0.86rem]"
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.4, delay: 0.9, ease }}

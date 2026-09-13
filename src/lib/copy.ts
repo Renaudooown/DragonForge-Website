@@ -13,8 +13,8 @@ export const hero = {
 export const manifesto = {
   inherit: [
     "We inherited a world",
-    "built by people who believed",
-    "in transmission —",
+    "built by people who",
+    "believed in transmission —",
   ],
   qualities: [
     "of judgment,",

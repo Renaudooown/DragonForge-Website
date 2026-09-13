@@ -127,7 +127,7 @@ void main() {
   float spots = smoothstep(0.58, 0.84, fbm3(sp * 1.55 + 9.2));
   float umbra = smoothstep(0.72, 0.94, fbm3(sp * 1.55 + 9.2));
 
-  float limb = pow(clamp(nrm.z, 0.0, 1.0), 0.78);
+  float limb = pow(clamp(nrm.z, 0.0, 1.0), 0.9);
 
   vec3 colDeep = vec3(0.10, 0.012, 0.008);
   vec3 colEmber = vec3(0.38, 0.045, 0.016);
@@ -146,7 +146,9 @@ void main() {
 
   float ang = atan(uvw.y, uvw.x);
   float warp = fbm2(vec2(ang * 1.85, t * 0.055)) - 0.5;
-  float disc = smoothstep(rad + 0.022 + warp * 0.06, rad - 0.01, r);
+  float boil = fbm2(uvw * 6.4 + vec2(t * 0.035, -t * 0.028));
+  photo *= 0.88 + 0.2 * boil;
+  float disc = smoothstep(rad + 0.034 + warp * 0.1, rad - 0.016, r);
   float rim = exp(-pow(abs(r - rad) * 52.0, 2.0));
   float cr = (r - rad) + warp * 0.08;
 

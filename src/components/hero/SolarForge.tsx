@@ -71,8 +71,8 @@ function layoutFor(width: number, height: number) {
     };
   }
   return {
-    origin: { x: 0.86, y: 0.38 },
-    radius: 0.94,
+      origin: { x: 0.9, y: 0.4 },
+      radius: 0.98,
     cssX: "96%",
     cssY: "4%",
     ember: { x: 0.9, y: 0.1 },
