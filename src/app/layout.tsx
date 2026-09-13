@@ -47,7 +47,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full bg-navy font-sans text-ivory">
         {children}
-        <div className="grain" aria-hidden="true" />
       </body>
     </html>
   );

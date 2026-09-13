@@ -177,7 +177,7 @@ export function SolarForge({
 
     const emberCtx = emberCanvas.getContext("2d");
     const embers: Ember[] = [];
-    const emberCount = reduceMotion ? 0 : 7;
+    const emberCount = 0;
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
