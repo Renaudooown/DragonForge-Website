@@ -23,60 +23,12 @@ function compile(
   return shader;
 }
 
-type Ember = {
-  a: number;
-  life: number;
-  max: number;
-  r: number;
-  s: number;
-  vx: number;
-  vy: number;
-  x: number;
-  y: number;
-};
-
-function spawnEmber(
-  w: number,
-  h: number,
-  origin: { x: number; y: number },
-  radius: number,
-): Ember {
-  const ang = -0.5 + Math.random() * 2.4;
-  const cx = origin.x * w;
-  const cy = origin.y * h;
-  const rad = radius * Math.min(w, h);
-  const speed = 0.03 + Math.random() * 0.1;
-  return {
-    x: cx + Math.cos(ang) * rad * (0.88 + Math.random() * 0.14),
-    y: cy + Math.sin(ang) * rad * (0.88 + Math.random() * 0.14),
-    vx: Math.cos(ang) * speed * 0.32,
-    vy: Math.sin(ang) * speed - 0.05,
-    r: 0.3 + Math.random() * 0.7,
-    a: 0.06 + Math.random() * 0.12,
-    life: 0,
-    max: 160 + Math.random() * 200,
-    s: 0.4 + Math.random() * 0.5,
-  };
-}
-
 function layoutFor(width: number, height: number) {
   const portrait = height > width * 1.08;
   if (portrait) {
-    return {
-      origin: { x: 0.9, y: 1.22 },
-      radius: 1.16,
-      cssX: "108%",
-      cssY: "-6%",
-      ember: { x: 0.92, y: 0.04 },
-    };
+    return { origin: { x: 0.9, y: 1.22 }, radius: 1.16 };
   }
-  return {
-      origin: { x: 0.9, y: 0.4 },
-      radius: 0.98,
-    cssX: "96%",
-    cssY: "4%",
-    ember: { x: 0.9, y: 0.1 },
-  };
+  return { origin: { x: 0.9, y: 0.4 }, radius: 0.98 };
 }
 
 export function SolarForge({
@@ -88,15 +40,11 @@ export function SolarForge({
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const glRef = useRef<HTMLCanvasElement>(null);
-  const emberRef = useRef<HTMLCanvasElement>(null);
-  const atmosphereRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const wrap = wrapRef.current;
     const glCanvas = glRef.current;
-    const emberCanvas = emberRef.current;
-    const atmosphere = atmosphereRef.current;
-    if (!wrap || !glCanvas || !emberCanvas) return;
+    if (!wrap || !glCanvas) return;
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -175,30 +123,18 @@ export function SolarForge({
       wrap.dataset.gl = "ready";
     }
 
-    const emberCtx = emberCanvas.getContext("2d");
-    const embers: Ember[] = [];
-    const emberCount = 0;
-
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
       const w = Math.max(1, Math.floor(rect.width));
       const h = Math.max(1, Math.floor(rect.height));
       layout = layoutFor(w, h);
-      wrap.style.setProperty("--sun-x", layout.cssX);
-      wrap.style.setProperty("--sun-y", layout.cssY);
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.35);
-      const scale = w < 768 ? 0.62 : 0.88;
+      const dpr = Math.min(Math.round(window.devicePixelRatio || 1), 2);
 
       glCanvas.style.width = `${w}px`;
       glCanvas.style.height = `${h}px`;
-      glCanvas.width = Math.max(1, Math.floor(w * dpr * scale));
-      glCanvas.height = Math.max(1, Math.floor(h * dpr * scale));
-
-      emberCanvas.style.width = `${w}px`;
-      emberCanvas.style.height = `${h}px`;
-      emberCanvas.width = Math.max(1, Math.floor(w * dpr));
-      emberCanvas.height = Math.max(1, Math.floor(h * dpr));
+      glCanvas.width = Math.max(1, w * dpr);
+      glCanvas.height = Math.max(1, h * dpr);
 
       if (gl) gl.viewport(0, 0, glCanvas.width, glCanvas.height);
     };
@@ -226,7 +162,6 @@ export function SolarForge({
       intro = Math.min(1, intro + (reduceMotion ? 1 : 0.007));
 
       wrap.style.visibility = fadeValue < 0.012 ? "hidden" : "visible";
-      if (atmosphere) atmosphere.style.opacity = String(fadeValue);
 
       if (gl && program) {
         gl.viewport(0, 0, glCanvas.width, glCanvas.height);
@@ -241,31 +176,6 @@ export function SolarForge({
           gl.uniform1f(locRadius, radius);
           gl.uniform1f(locFade, fadeValue);
           gl.drawArrays(gl.TRIANGLES, 0, 3);
-        }
-      }
-
-      if (emberCtx) {
-        const w = emberCanvas.width;
-        const h = emberCanvas.height;
-        emberCtx.clearRect(0, 0, w, h);
-        if (fadeValue > 0.01 && emberCount > 0) {
-          emberCtx.globalCompositeOperation = "lighter";
-          while (embers.length < emberCount) {
-            embers.push(spawnEmber(w, h, layout.ember, layout.radius * 0.42));
-          }
-          for (let i = embers.length - 1; i >= 0; i -= 1) {
-            const p = embers[i];
-            p.life += 1;
-            p.x += p.vx * p.s;
-            p.y += p.vy * p.s;
-            const k = p.life / p.max;
-            const alpha = p.a * (1 - k) * intro * fadeValue;
-            emberCtx.beginPath();
-            emberCtx.fillStyle = `rgba(196, ${58 + p.r * 24}, 22, ${alpha})`;
-            emberCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            emberCtx.fill();
-            if (p.life > p.max) embers.splice(i, 1);
-          }
         }
       }
     };
@@ -290,12 +200,10 @@ export function SolarForge({
     <div
       ref={wrapRef}
       aria-hidden="true"
-      className="sun-stage pointer-events-none absolute inset-0 overflow-hidden"
+      className="sun-stage pointer-events-none absolute inset-0"
     >
-      <div ref={atmosphereRef} className="sun-atmosphere" />
       <div className="sun-fallback" />
       <canvas ref={glRef} className="sun-canvas" />
-      <canvas ref={emberRef} className="sun-canvas" />
     </div>
   );
 }

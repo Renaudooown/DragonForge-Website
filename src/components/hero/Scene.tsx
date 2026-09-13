@@ -24,7 +24,7 @@ function HeroType({
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative z-10 h-[100svh] min-h-[640px]">
+    <section className="relative h-[100svh] min-h-[640px]">
       <motion.div
         className="absolute bottom-[16vh] left-6 sm:bottom-[20vh] sm:left-[7vw]"
         style={reduce ? undefined : { opacity, y }}

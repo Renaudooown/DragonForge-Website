@@ -90,12 +90,6 @@ vec3 rotateY(vec3 p, float a) {
   return vec3(c * p.x + s * p.z, p.y, -s * p.x + c * p.z);
 }
 
-vec3 rotateX(vec3 p, float a) {
-  float c = cos(a);
-  float s = sin(a);
-  return vec3(p.x, c * p.y - s * p.z, s * p.y + c * p.z);
-}
-
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / min(uRes.x, uRes.y);
   uv -= uPointer * 0.01;
@@ -113,8 +107,7 @@ void main() {
   float z = sqrt(max(inside, 0.0));
   vec3 nrm = normalize(vec3(uvw, z));
 
-  vec3 sp = rotateX(nrm, 0.31 + 0.04 * sin(t * 0.11));
-  sp = rotateY(sp, t * 0.018);
+  vec3 sp = rotateY(nrm, t * 0.018);
   float warp3 = fbm3(sp * 2.2 + t * 0.025);
   sp += 0.18 * (warp3 * 2.0 - 1.0) * vec3(0.42, 0.18, 0.36);
 
